@@ -1,0 +1,41 @@
+﻿<Window x:Class="WPFClientDB.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFClientDB"
+        mc:Ignorable="d"
+        Title="Client" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="25">
+            <MenuItem Header="File">
+                <MenuItem Header="Save to csv..." Command="{Binding SaveCSV}"/>
+                <MenuItem Header="Load from database..." Command="{Binding OpenFile}"/>
+            </MenuItem>
+        </Menu>
+        <ListView x:Name="TableDataList" Grid.Row="1" ItemsSource="{Binding Items}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding RunName}">RunName</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding ItemTag}">ItemTag</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Npd}">NPD</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding RunLength}">RunLength</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding LineWeight}">LineWeight</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding RunDiam}">RunDiam</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding PressureRating}">PressureRating</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding FluidCode}">FluidCode</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Temp}">Temp</GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBlock x:Name="stateTextBlock" Grid.Row="2" Text="{Binding StateString}" ToolTip="State string"/>
+    </Grid>
+</Window>
