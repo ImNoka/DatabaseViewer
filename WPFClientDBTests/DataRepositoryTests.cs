@@ -103,6 +103,38 @@ namespace WPFClientDBTests
                                                 "\nTemp: "+fluid.Temp);
             Assert.Equal(4, pipingFluids.Count);
         }
+        [Fact]
+        public void UpdateDataTest()
+        {
+            Debug.WriteLine("Start test");
+            DatabaseData data = new DatabaseData(@"C:\Projects\Csh\К собеседованию дотнет\Нефтехимпроект\test_db — копия.db3");
+            Debug.WriteLine($"Data initialized. Sample: {data.Fluids[0].Oid}");
+
+            List<PipingFluid> pipingFluids = new List<PipingFluid>();
+            pipingFluids = data.Fluids;
+            pipingFluids[0].Temp = 999.0;
+            DataRepository.UpdateData(pipingFluids[0]);
+        }
+
+
+
+        struct DatabaseData
+        {
+            public List<PipingFluid> Fluids = new List<PipingFluid>();
+            public List<PipingPhysical> Physicals = new List<PipingPhysical>();
+            public List<PipingRun> Runs = new List<PipingRun>();
+            public List<RunToFluid> RunToFluids = new List<RunToFluid>();
+            public List<RunToPhysical> RunToPhysicals = new List<RunToPhysical>();
+            public DatabaseData(string connectionString)
+            {
+                ArrayList list = DataRepository.GetData(connectionString);
+                Fluids = list[0] as List<PipingFluid>;
+                Physicals = list[1] as List<PipingPhysical>;
+                Runs = list[2] as List<PipingRun>;
+                RunToFluids = list[3] as List<RunToFluid>;
+                RunToPhysicals = list[4] as List<RunToPhysical>;
+            }
+        }
 
     }
 }

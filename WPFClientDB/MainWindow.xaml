@@ -24,15 +24,69 @@
         <ListView x:Name="TableDataList" Grid.Row="1" ItemsSource="{Binding Items}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding RunName}">RunName</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding ItemTag}">ItemTag</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Npd}">NPD</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding RunLength}">RunLength</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding LineWeight}">LineWeight</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding RunDiam}">RunDiam</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding PressureRating}">PressureRating</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding FluidCode}">FluidCode</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Temp}">Temp</GridViewColumn>
+                    <GridViewColumn>RunName
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding RunName}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>ItemTag
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding ItemTag}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>NPD
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Npd}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>RunLength
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding RunLength}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>LineWeight
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding LineWeight}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>RunDiam
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding RunDiam}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>PressureRating
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding PressureRating}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>FluidCode
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding FluidCode}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>Temp
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Temp}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

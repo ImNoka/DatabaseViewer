@@ -41,5 +41,23 @@ namespace WPFClientDB.Service
 
             return true;
         }
+        public static bool UpdateData(PipingFluid fluid)
+        {
+            if(fluid==null) return false;
+            DataRepository.UpdateData(fluid);
+            return true;
+        }
+        public static bool UpdateData(PipingPhysical physical)
+        {
+            if (physical == null) return false;
+            DataRepository.UpdateData(physical);
+            return true;
+        }
+        public static bool UpdateData(PipingRun run)
+        {
+            if (run == null) return false;
+            DataRepository.UpdateData(run);
+            return true;
+        }
     }
 }
