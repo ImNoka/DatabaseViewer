@@ -13,9 +13,9 @@ namespace WPFClientDB.Model
     public class ModelFacade : INotifyPropertyChanged
     {
 
-        private PipingFluid PipingFluid;
-        private PipingPhysical PipingPhysical;
-        private PipingRun PipingRun;
+        internal PipingFluid PipingFluid;
+        internal PipingPhysical PipingPhysical;
+        internal PipingRun PipingRun;
 
         private enum ParentType
         {

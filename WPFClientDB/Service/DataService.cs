@@ -41,6 +41,7 @@ namespace WPFClientDB.Service
 
             return true;
         }
+
         public static bool UpdateData(PipingFluid fluid)
         {
             if(fluid==null) return false;
@@ -57,6 +58,13 @@ namespace WPFClientDB.Service
         {
             if (run == null) return false;
             DataRepository.UpdateData(run);
+            return true;
+        }
+
+        public static bool RemoveRunData(ModelFacade facade)
+        {
+            if(facade.PipingRun==null) return false;
+            DataRepository.RemoveRunData(facade.PipingRun);
             return true;
         }
     }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WPFClientDB.Model;
 using WPFClientDB.Service;
+using System.Windows;
 
 namespace WPFClientDB.ViewModel
 {
@@ -16,6 +17,7 @@ namespace WPFClientDB.ViewModel
     {
         string connectionString;
         private string stateString;
+        private bool checkDelete = true;
 
         private ObservableCollection<ModelFacade> items;
 
@@ -39,9 +41,19 @@ namespace WPFClientDB.ViewModel
             }
         }
 
+        public bool CheckDelete
+        {
+            get { return checkDelete; }
+            set 
+            { 
+                checkDelete = value; 
+                OnPropertyChanged("CheckDelete"); 
+            }
+        }
+
         private RelayCommand openFile;
         private RelayCommand saveCSV;
-        private RelayCommand callMessage;
+        private RelayCommand removeRun;
 
 
         public RelayCommand OpenFile
@@ -92,18 +104,35 @@ namespace WPFClientDB.ViewModel
             }
         }
 
-        public RelayCommand CallMessage
+        public RelayCommand RemoveRun
         {
             get
             {
-                return callMessage
-                    ?? (callMessage = new RelayCommand((obj) =>
-                    {
-
-                    }));
+                return removeRun
+                  ?? (removeRun = new RelayCommand((obj) =>
+                  {
+                      ModelFacade facade = obj as ModelFacade;
+                      if (facade == null) return;
+                      if (CheckDelete)
+                      {
+                          MessageBoxResult result = MessageBox.Show($"Are you want to delete {facade.RunName}?",
+                                                                    "Delete run",
+                                                                    MessageBoxButton.YesNo);
+                          if (result == MessageBoxResult.No)
+                              return;
+                      }                
+                      if (DataService.RemoveRunData(facade))
+                      {
+                          Items.Remove(facade);
+                          StateString = $"{facade.RunName} deleted";
+                          return;
+                      }
+                      StateString = "Deletion error";
+                  }));
             }
         }
 
+        
 
         public MainViewModel()
         {

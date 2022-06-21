@@ -48,6 +48,7 @@ namespace DataBaseManager.Repository
             return list;
 
         }
+
         public static List<PipingFluid> GetPipingFluids(string connectionString)
         {
             
@@ -58,11 +59,6 @@ namespace DataBaseManager.Repository
                 fluids = context.PipingFluids.ToList();
             }
             return fluids;
-        }
-
-        public static List<PipingPhysical> GetPipingPhysicals(string connectionString)
-        {
-            throw new NotImplementedException();
         }
             
         public static bool UpdateData(PipingFluid obj)
@@ -80,7 +76,7 @@ namespace DataBaseManager.Repository
                     try
                     {
 
-                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingFluid SET FluidCode={obj.FluidCode}, PressureRating={obj.PressureRating}, Temp={obj.Temp} WHERE OID={obj.Oid}");
+                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingFluid SET FluidCode={fluid.FluidCode}, PressureRating={fluid.PressureRating}, Temp={fluid.Temp} WHERE OID={fluid.Oid}");
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
@@ -104,7 +100,7 @@ namespace DataBaseManager.Repository
                     try
                     {
 
-                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingPhysical SET RunLength={obj.RunLength}, LineWeight={obj.LineWeight}, RunDiam={obj.RunDiam} WHERE OID={obj.Oid}");
+                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingPhysical SET RunLength={physical.RunLength}, LineWeight={physical.LineWeight}, RunDiam={physical.RunDiam} WHERE OID={physical.Oid}");
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
@@ -128,11 +124,39 @@ namespace DataBaseManager.Repository
                     try
                     {
 
-                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingRun SET RunName={obj.RunName}, ItemTag={obj.ItemTag} WHERE OID={obj.Oid}");
+                        db.Database.ExecuteSqlInterpolated($"UPDATE PipingRun SET RunName={run.RunName}, ItemTag={run.ItemTag} WHERE OID={run.Oid}");
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
                     { dbTransaction.Rollback(); return false; }
+                }
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public static bool RemoveRunData(PipingRun obj)
+        {
+            var run = db.PipingRuns.FirstOrDefault(f=>f.Oid==obj.Oid);
+            System.Diagnostics.Debug.WriteLine("Found: "+run.Oid);
+            if (run!= null)
+            {
+                using(var dbTransaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.Database.ExecuteSqlInterpolated($"DELETE FROM PipingRun WHERE OID={run.Oid}");
+                        db.Database.ExecuteSqlInterpolated($"DELETE FROM RunToPhysical WHERE OIDFrom={run.Oid}");
+                        db.Database.ExecuteSqlInterpolated($"DELETE FROM RunToFluid WHERE OIDFrom={run.Oid}");
+                        dbTransaction.Commit();
+                    }
+                    catch (Exception ex)
+                    { 
+                        dbTransaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        return false;
+                    }
                 }
                 db.SaveChanges();
                 return true;

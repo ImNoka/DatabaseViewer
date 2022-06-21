@@ -116,6 +116,15 @@ namespace WPFClientDBTests
             DataRepository.UpdateData(pipingFluids[0]);
         }
 
+        [Fact]
+        public void DeleteDataTest()
+        {
+            DatabaseData data = new DatabaseData(@"C:\Projects\Csh\К собеседованию дотнет\Нефтехимпроект\test_db — копия — копия.db3");
+            PipingRun run = data.Runs[0];
+            Debug.WriteLine("Got: " + run.Oid);
+            Assert.True(DataRepository.RemoveRunData(run));
+        }
+
 
 
         struct DatabaseData

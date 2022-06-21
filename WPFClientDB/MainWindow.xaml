@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFClientDB"
         mc:Ignorable="d"
-        Title="Client" Height="450" Width="800">
+        Title="Client" Height="450" Width="800"
+        x:Name="ClientWindow">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -20,8 +21,9 @@
                 <MenuItem Header="Save to csv..." Command="{Binding SaveCSV}"/>
                 <MenuItem Header="Load from database..." Command="{Binding OpenFile}"/>
             </MenuItem>
+            <CheckBox Grid.Row="0" HorizontalAlignment="Right" Content="Deletion confirmation" IsChecked="{Binding CheckDelete}"/>
         </Menu>
-        <ListView x:Name="TableDataList" Grid.Row="1" ItemsSource="{Binding Items}">
+        <ListView x:Name="TableDataList" Grid.Row="1" Tag="{Binding ElementName=ClientWindow}" ItemsSource="{Binding Items}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>RunName
@@ -84,6 +86,14 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding Temp}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>Delete
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Command="{Binding ElementName=ClientWindow,Path=DataContext.RemoveRun}"
+                                                        CommandParameter="{Binding}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
