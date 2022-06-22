@@ -21,6 +21,9 @@ namespace WPFClientDB.ViewModel
 
         private ObservableCollection<ModelFacade> items;
 
+        /// <summary>
+        /// State string used for tracking recent actions.
+        /// </summary>
         public string StateString
         {
             get { return stateString; }
@@ -30,6 +33,7 @@ namespace WPFClientDB.ViewModel
                 OnPropertyChanged("StateString");
             }
         }
+
 
         public ObservableCollection<ModelFacade> Items
         {
@@ -41,6 +45,11 @@ namespace WPFClientDB.ViewModel
             }
         }
 
+        /// <summary>
+        /// Delete confirmation property.
+        /// True - ConfirmationBox appears,
+        /// False - ConfirmationBox don't appears.
+        /// </summary>
         public bool CheckDelete
         {
             get { return checkDelete; }
@@ -55,7 +64,9 @@ namespace WPFClientDB.ViewModel
         private RelayCommand saveCSV;
         private RelayCommand removeRun;
 
-
+        /// <summary>
+        /// Open file using OpenFileDialog and call DataService GetData method with file path.
+        /// </summary>
         public RelayCommand OpenFile
         {
             get
@@ -104,6 +115,10 @@ namespace WPFClientDB.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls DataService RemoveRunData method. 
+        /// If deletion is successful, removes ModelFacade item from collection.
+        /// </summary>
         public RelayCommand RemoveRun
         {
             get
@@ -136,7 +151,6 @@ namespace WPFClientDB.ViewModel
 
         public MainViewModel()
         {
-            //Items = DataService.GetData("");
         }
 
 

@@ -7,6 +7,10 @@ using System.Windows.Input;
 
 namespace WPFClientDB.ViewModel
 {
+    /// <summary>
+    /// Implements ICommand interface. 
+    /// Gets Action type delegate and executes this.
+    /// </summary>
     public class RelayCommand : ICommand
     {
         private Action<object> execute;

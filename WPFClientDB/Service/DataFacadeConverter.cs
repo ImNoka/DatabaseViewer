@@ -10,8 +10,21 @@ using WPFClientDB.Model;
 
 namespace WPFClientDB.Service
 {
+    /// <summary>
+    /// Static class used for entity-view model convertations.
+    /// </summary>
     public static class DataFacadeConverter
     {
+        /// <summary>
+        /// Takes entities ArrayList and puts them to ModelFacade collection.
+        /// </summary>
+        /// <param name="list">ArrayList, where:
+        /// [0] is PipingFluid list,
+        /// [1] is PipingPhysical list,
+        /// [2] is PipingRun list,
+        /// [3] is RunToFluid list,
+        /// [4] is RunToPhysical list.</param>
+        /// <returns></returns>
         public static ObservableCollection<ModelFacade> DataToFacade(ArrayList list)
         {
             ObservableCollection<ModelFacade> result = new ObservableCollection<ModelFacade>();

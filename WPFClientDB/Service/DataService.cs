@@ -12,9 +12,17 @@ using DataBaseManager.Repository;
 
 namespace WPFClientDB.Service
 {
+    /// <summary>
+    /// Static class used for external data manipulations.
+    /// </summary>
     public static class DataService
     {
-
+        /// <summary>
+        /// Makes a query to DataBaseManager with database file path,
+        /// gets ArrayList, converts entities to ModelFacade using DataFacadeConverter.
+        /// </summary>
+        /// <param name="connectionString">File path</param>
+        /// <returns></returns>
         public static ObservableCollection<ModelFacade> GetData(string connectionString)
         {
             ArrayList itemList = new ArrayList();
@@ -24,6 +32,13 @@ namespace WPFClientDB.Service
 
         }
 
+        /// <summary>
+        /// Saves ModelFacade collection to CSV file with file path.
+        /// </summary>
+        /// <param name="items">ModelFacade collection</param>
+        /// <param name="path">File path</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static bool SaveToCSV(ObservableCollection<ModelFacade> items, string path)
         {
             if(items==null||items.Count<=0)
@@ -41,6 +56,7 @@ namespace WPFClientDB.Service
 
             return true;
         }
+
 
         public static bool UpdateData(PipingFluid fluid)
         {

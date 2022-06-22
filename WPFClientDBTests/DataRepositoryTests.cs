@@ -9,17 +9,17 @@ namespace WPFClientDBTests
 {
     public class DataRepositoryTests
     {
-        [Fact]
-        public void Test1()
-        {
+        /// <summary>
+        /// Use your file path without "@".
+        /// </summary>
+        private string connectionString => "";
 
-        }
 
         [Fact]
         public void ConvertationVarTest()
         {
             ArrayList list = new ArrayList();
-            list = DataRepository.GetData("");
+            list = DataRepository.GetData(@connectionString);
             List<PipingFluid> fluids = new List<PipingFluid>();
             fluids = list[0] as List<PipingFluid>;
             List<PipingPhysical> physicals = new List<PipingPhysical>();
@@ -42,7 +42,7 @@ namespace WPFClientDBTests
         public void ConvertationFindTest()
         {
             ArrayList list = new ArrayList();
-            list = DataRepository.GetData("");
+            list = DataRepository.GetData(@connectionString);
             List<PipingFluid> fluids = new List<PipingFluid>();
             fluids = list[0] as List<PipingFluid>;
             List<PipingPhysical> physicals = new List<PipingPhysical>();
@@ -56,17 +56,18 @@ namespace WPFClientDBTests
 
             foreach (var run in runs)
             {
-                var phys_OID = runToPhysicals.Find(f => f.Oidfrom == run.Oid);
                 var phys = physicals.Find(f => runToPhysicals.Find(f=>f.Oidfrom==run.Oid).Equals(f.Oid));
             }
         }
 
-
+        /// <summary>
+        /// Change count of objects in asserts to make truthful test.
+        /// </summary>
         [Fact]
         public void GetDataTest()
         {
             ArrayList list = new ArrayList();
-            list = DataRepository.GetData("");
+            list = DataRepository.GetData(@connectionString);
             List<PipingFluid> fluids = new List<PipingFluid>();
             fluids = list[0] as List<PipingFluid>;
             List<PipingPhysical> physicals = new List<PipingPhysical>();
@@ -89,25 +90,30 @@ namespace WPFClientDBTests
             Assert.Equal(6,physicals.Count);
         }
 
-        [Fact]
-        public void GetPipingFluidsTest()
+        struct DatabaseData
         {
-            List<PipingFluid> pipingFluids = new List<PipingFluid>();
-            pipingFluids = DataRepository.GetPipingFluids("");
-            Debug.WriteLine(pipingFluids.Count);
-            Trace.WriteLine(pipingFluids.Count);
-            foreach(PipingFluid fluid in pipingFluids)
-            System.Diagnostics.Debug.WriteLine( fluid.Oid+
-                                                "\nFC: "+fluid.FluidCode+
-                                                "\nPrRating: "+fluid.PressureRating+
-                                                "\nTemp: "+fluid.Temp);
-            Assert.Equal(4, pipingFluids.Count);
+            public List<PipingFluid> Fluids = new List<PipingFluid>();
+            public List<PipingPhysical> Physicals = new List<PipingPhysical>();
+            public List<PipingRun> Runs = new List<PipingRun>();
+            public List<RunToFluid> RunToFluids = new List<RunToFluid>();
+            public List<RunToPhysical> RunToPhysicals = new List<RunToPhysical>();
+            public DatabaseData(string connectionString)
+            {
+                ArrayList list = DataRepository.GetData(@connectionString);
+                Fluids = list[0] as List<PipingFluid>;
+                Physicals = list[1] as List<PipingPhysical>;
+                Runs = list[2] as List<PipingRun>;
+                RunToFluids = list[3] as List<RunToFluid>;
+                RunToPhysicals = list[4] as List<RunToPhysical>;
+            }
         }
+
+
         [Fact]
         public void UpdateDataTest()
         {
             Debug.WriteLine("Start test");
-            DatabaseData data = new DatabaseData(@"C:\Projects\Csh\К собеседованию дотнет\Нефтехимпроект\test_db — копия.db3");
+            DatabaseData data = new DatabaseData(connectionString);
             Debug.WriteLine($"Data initialized. Sample: {data.Fluids[0].Oid}");
 
             List<PipingFluid> pipingFluids = new List<PipingFluid>();
@@ -119,7 +125,7 @@ namespace WPFClientDBTests
         [Fact]
         public void DeleteDataTest()
         {
-            DatabaseData data = new DatabaseData(@"C:\Projects\Csh\К собеседованию дотнет\Нефтехимпроект\test_db — копия — копия.db3");
+            DatabaseData data = new DatabaseData(connectionString);
             PipingRun run = data.Runs[0];
             Debug.WriteLine("Got: " + run.Oid);
             Assert.True(DataRepository.RemoveRunData(run));
@@ -127,23 +133,7 @@ namespace WPFClientDBTests
 
 
 
-        struct DatabaseData
-        {
-            public List<PipingFluid> Fluids = new List<PipingFluid>();
-            public List<PipingPhysical> Physicals = new List<PipingPhysical>();
-            public List<PipingRun> Runs = new List<PipingRun>();
-            public List<RunToFluid> RunToFluids = new List<RunToFluid>();
-            public List<RunToPhysical> RunToPhysicals = new List<RunToPhysical>();
-            public DatabaseData(string connectionString)
-            {
-                ArrayList list = DataRepository.GetData(connectionString);
-                Fluids = list[0] as List<PipingFluid>;
-                Physicals = list[1] as List<PipingPhysical>;
-                Runs = list[2] as List<PipingRun>;
-                RunToFluids = list[3] as List<RunToFluid>;
-                RunToPhysicals = list[4] as List<RunToPhysical>;
-            }
-        }
+        
 
     }
 }

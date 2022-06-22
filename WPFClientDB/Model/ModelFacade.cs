@@ -10,23 +10,27 @@ using WPFClientDB.Service;
 
 namespace WPFClientDB.Model
 {
+    /// <summary>
+    /// Data model using Facade pattern for view.
+    /// </summary>
     public class ModelFacade : INotifyPropertyChanged
     {
 
-        internal PipingFluid PipingFluid;
-        internal PipingPhysical PipingPhysical;
-        internal PipingRun PipingRun;
+        internal PipingFluid PipingFluid { get; }
+        internal PipingPhysical PipingPhysical { get; }
+        internal PipingRun PipingRun { get; }
 
-        private enum ParentType
+        /// <summary>
+        /// Enum object. Used for SetField method.
+        /// </summary>
+        private enum EntityType
         {
             PipingFluid,
             PipingPhysical,
             PipingRun
         }
 
-        //private RunToFluid RunToFluid { get; set; }
-        //private RunToPhysical RunToPhysical { get; set; }
-
+        // View datatable props.
         #region External params
 
         public string RunName
@@ -35,7 +39,7 @@ namespace WPFClientDB.Model
             set
             {
                 PipingRun.RunName = value;
-                SetField(ParentType.PipingRun, value);
+                SetField(EntityType.PipingRun, value);
             }
         }
         public string? ItemTag
@@ -44,7 +48,7 @@ namespace WPFClientDB.Model
             set
             {
                 PipingRun.ItemTag = value;
-                SetField(ParentType.PipingRun, value);
+                SetField(EntityType.PipingRun, value);
             }
         }
         public long Npd
@@ -53,7 +57,7 @@ namespace WPFClientDB.Model
             set
             {
                 PipingRun.Npd = value;
-                SetField(ParentType.PipingRun, value);
+                SetField(EntityType.PipingRun, value);
             }
         }
         public double? RunLength
@@ -62,7 +66,7 @@ namespace WPFClientDB.Model
             set
             {
                 PipingPhysical.RunLength = value;
-                SetField(ParentType.PipingPhysical, value);
+                SetField(EntityType.PipingPhysical, value);
             }
         }
         public double? LineWeight
@@ -71,7 +75,7 @@ namespace WPFClientDB.Model
             set
             {
                 PipingPhysical.LineWeight = value;
-                SetField(ParentType.PipingPhysical, value);
+                SetField(EntityType.PipingPhysical, value);
             }
         }
         public double? RunDiam
@@ -80,7 +84,7 @@ namespace WPFClientDB.Model
             set 
             { 
                 PipingPhysical.RunDiam = value;
-                SetField(ParentType.PipingPhysical, value);     
+                SetField(EntityType.PipingPhysical, value);     
             }
         }
         public double? PressureRating
@@ -89,7 +93,7 @@ namespace WPFClientDB.Model
             set 
             { 
                 PipingFluid.PressureRating = value;
-                SetField(ParentType.PipingFluid, value);
+                SetField(EntityType.PipingFluid, value);
             }
         }
         public string? FluidCode
@@ -98,7 +102,7 @@ namespace WPFClientDB.Model
             set 
             { 
                 PipingFluid.FluidCode = value;
-                SetField(ParentType.PipingFluid, value);
+                SetField(EntityType.PipingFluid, value);
             }
         }
         public double? Temp
@@ -107,20 +111,25 @@ namespace WPFClientDB.Model
             set 
             { 
                 PipingFluid.Temp = value;
-                SetField(ParentType.PipingFluid,value);
+                SetField(EntityType.PipingFluid,value);
             }
         }
         #endregion
 
-        public ModelFacade(  PipingFluid piping,
+
+        /// <summary>
+        /// Creates new ModelFacade object from entities.
+        /// </summary>
+        /// <param name="fluid">PipingFluid</param>
+        /// <param name="physical">PipingPhysical</param>
+        /// <param name="run">PipingRun</param>
+        public ModelFacade(  PipingFluid fluid,
                                 PipingPhysical physical,
-                                PipingRun pipingRun)
+                                PipingRun run)
         {
-            PipingFluid = piping;
+            PipingFluid = fluid;
             PipingPhysical = physical;
-            PipingRun = pipingRun;
-            //RunToFluid = runToFluid;
-            //RunToPhysical = runToPhysical;
+            PipingRun = run;
         }
 
 
@@ -149,24 +158,36 @@ namespace WPFClientDB.Model
             }
         }
 
-        private bool SetField<T>(ParentType type,
+        /// <summary>
+        /// Method used for implement PropertyChanged and
+        /// initializing query to DataBaseManager.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type">Chose target entity</param>
+        /// <param name="value">New value</param>
+        /// <param name="propertyName">Entity's property name</param>
+        /// <returns></returns>
+        private bool SetField<T>(EntityType type,
                                  T value, 
                                  [CallerMemberName] string propertyName = "")
         {
-            //if(EqualityComparer<T>.Default.Equals(field, value))return false;
-            //field = value;
-            OnPropertyChanged(propertyName);
+            
             switch (type)
             {
-                case ParentType.PipingFluid:
-                    DataService.UpdateData(PipingFluid);
+                case EntityType.PipingFluid:
+                    if(DataService.UpdateData(PipingFluid))
+                        OnPropertyChanged(propertyName);
                     break;
-                case ParentType.PipingPhysical:
-                    DataService.UpdateData(PipingPhysical);
+                case EntityType.PipingPhysical:
+                    if(DataService.UpdateData(PipingPhysical))
+                        OnPropertyChanged(propertyName);
                     break;
-                case ParentType.PipingRun:
-                    DataService.UpdateData(PipingRun);
+                case EntityType.PipingRun:
+                    if(DataService.UpdateData(PipingRun))
+                        OnPropertyChanged(propertyName);
                     break;
+                default:
+                    throw new Exception("Property change error.");
             }
             return true;
         }

@@ -15,12 +15,18 @@ namespace DataBaseManager.Repository
     public static class DataRepository
     {
         private static test_dbContext db;
-        private static List<PipingFluid> Fluids { get; set; }
-        private static List<PipingPhysical> Physicals { get; set; }
-        private static List<PipingRun> Runs { get; set; }
-        private static List<RunToFluid> RunToFluids { get; set; }
-        private static List<RunToPhysical> RunToPhysicals { get; set; }
 
+        /// <summary>
+        /// Creates new DataContext with file path and gets all data from tables.
+        /// Forms new ArrayList of entities lists.
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns>ArrayList, where:
+        /// [0] - PipingFluid list,
+        /// [1] - PipingPhysical list,
+        /// [2] - PipingRun list,
+        /// [3] - RunToFluid list,
+        /// [4] - RunToPhysical list.</returns>
         public static ArrayList GetData(string connectionString)
         {
             db = new test_dbContext(connectionString);
@@ -35,11 +41,6 @@ namespace DataBaseManager.Repository
                 runs = db.PipingRuns.ToList();
                 runToFluids = db.RunToFluids.ToList();
                 runToPhysical = db.RunToPhysicals.ToList();
-                Fluids = fluids;
-                Physicals = physicals;
-                Runs = runs;
-                RunToFluids = runToFluids;
-                RunToPhysicals = runToPhysical;
             list.Add(fluids);
             list.Add(physicals);
             list.Add(runs);
@@ -48,24 +49,15 @@ namespace DataBaseManager.Repository
             return list;
 
         }
-
-        public static List<PipingFluid> GetPipingFluids(string connectionString)
-        {
-            
-            List<PipingFluid> fluids = new List<PipingFluid>();
-            using(test_dbContext context = new test_dbContext(connectionString))
-            {
-                context.PipingFluids.Load();
-                fluids = context.PipingFluids.ToList();
-            }
-            return fluids;
-        }
-            
+        
+        /// <summary>
+        /// Creates update PipingFluid transaction to database without using tracking.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static bool UpdateData(PipingFluid obj)
         {
-            System.Diagnostics.Debug.WriteLine("Find fluid");
             var fluid = db.PipingFluids.FirstOrDefault(f=>f.Oid==obj.Oid);
-            System.Diagnostics.Debug.WriteLine($"{fluid.Oid} found");
             if (fluid !=null)
             {
                 fluid.FluidCode = obj.FluidCode;
@@ -80,13 +72,22 @@ namespace DataBaseManager.Repository
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
-                    { dbTransaction.Rollback(); return false; }
+                    { 
+                        dbTransaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        return false; 
+                    }
                 }
                 db.SaveChanges();
                 return true;
             }
             return false;
         }
+        /// <summary>
+        /// Creates update PipingPhysical transaction to database without using tracking.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static bool UpdateData(PipingPhysical obj)
         {
             var physical = db.PipingPhysicals.FirstOrDefault(f => f.Oid == obj.Oid);
@@ -104,13 +105,22 @@ namespace DataBaseManager.Repository
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
-                    { dbTransaction.Rollback(); return false; }
+                    { 
+                        dbTransaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        return false; 
+                    }
                 }
                 db.SaveChanges();
                 return true;
             }
             return false;
         }
+        /// <summary>
+        /// Creates update PipingRun transaction to database without using tracking.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static bool UpdateData(PipingRun obj)
         {
             var run = db.PipingRuns.FirstOrDefault(f => f.Oid == obj.Oid);
@@ -128,7 +138,11 @@ namespace DataBaseManager.Repository
                         dbTransaction.Commit();
                     }
                     catch (Exception ex)
-                    { dbTransaction.Rollback(); return false; }
+                    { 
+                        dbTransaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        return false; 
+                    }
                 }
                 db.SaveChanges();
                 return true;
@@ -136,10 +150,15 @@ namespace DataBaseManager.Repository
             return false;
         }
 
+        /// <summary>
+        /// Creates delete transaction to database without using tracking.
+        /// Deletes rows from PipingRun, RunToPhysical, RunToFluid tables.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static bool RemoveRunData(PipingRun obj)
         {
             var run = db.PipingRuns.FirstOrDefault(f=>f.Oid==obj.Oid);
-            System.Diagnostics.Debug.WriteLine("Found: "+run.Oid);
             if (run!= null)
             {
                 using(var dbTransaction = db.Database.BeginTransaction())
@@ -162,6 +181,25 @@ namespace DataBaseManager.Repository
                 return true;
             }
             return false;
+        }
+
+
+
+        /// <summary>
+        /// Test method.
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        private static List<PipingFluid> GetPipingFluids(string connectionString)
+        {
+
+            List<PipingFluid> fluids = new List<PipingFluid>();
+            using (test_dbContext context = new test_dbContext(connectionString))
+            {
+                context.PipingFluids.Load();
+                fluids = context.PipingFluids.ToList();
+            }
+            return fluids;
         }
     }
 }
